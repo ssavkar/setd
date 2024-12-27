@@ -7,7 +7,7 @@
 ##
 
 function markstore() {
-    declare -x | grep MARKDIR_ > ~/.bash_markstore
+    declare -x | grep MARKDIR_ >| ~/.bash_markstore
 }
 
 function unmark {
@@ -94,7 +94,7 @@ _setd_autocomplete() {
     COMPREPLY=($(compgen -W "$words" "${COMP_WORDS[1]}"))
 }
 
-
+# If you do not want to override built in `cd` functionality, then comment out this function.
 function cd() {
     setd $1
 }

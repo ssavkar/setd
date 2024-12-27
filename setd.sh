@@ -30,7 +30,7 @@ function mark {
 	    "-l" | "-list")
 		marklist
 		;;
-    	    "-rm" | "-remove" | "=r")
+    	    "-rm" | "-remove" | "-r")
 		unmark $2
 		;;
     	    "-h" | "-help")

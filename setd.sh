@@ -4,15 +4,21 @@
 # License: MIT License
 #
 # setd.sh - directory marks and change directory integration with tab complete (autocomplete)
-#
+##
 
 function markstore() {
     declare -x | grep MARKDIR_ > ~/.bash_markstore
 }
 
 function unmark {
-    unset MARKDIR_$1
-    markstore
+    markvariable=MARKDIR_$1
+    if [ -v $markvariable ]; then
+	unset $markvariable
+	markstore
+	echo "Mark $1 deleted"
+    else
+	echo "No such mark $1"
+    fi
 }
 
 function marklist {
@@ -21,8 +27,20 @@ function marklist {
 
 function mark {
     if [[ "$1" =~ ^[[:alnum:]]+$ ]]; then
-	export MARKDIR_$1=`pwd`
-	markstore
+        markvariable=MARKDIR_$1
+	if [ -v $markvariable ]; then
+	    read -r -p "Overwrite existing mark [y/N] " response
+	    response=${response,,}
+	else  
+	    response="y"
+	fi
+	case $response in
+	    "y" | "ye" | "yes")
+		export MARKDIR_$1=`pwd`
+		markstore
+		;;
+	    *) ;;
+	esac
     elif [ -z "$1" ]; then
 	marklist
     else
@@ -34,7 +52,7 @@ function mark {
 		unmark $2
 		;;
     	    "-h" | "-help")
-		echo "mark: usage: mark [-l|rm] mark"	
+		echo "mark: usage: mark [-l|rm] mark"
 		;;
 	    *) echo "Unkown option $1"
 		;;

@@ -34,7 +34,7 @@ function mark {
 		unmark $2
 		;;
     	    "-h" | "-help")
-		echo "mark: usage: mark [-l|rm] mark[/additional path]"	
+		echo "mark: usage: mark [-l|rm] mark"	
 		;;
 	    *) echo "Unkown option $1"
 		;;

@@ -3,7 +3,7 @@
 # Copyright 2024, Sunil William Savkar <savkar@inthespace.com>
 # License: MIT License
 #
-# setd.sh - directory marks and change directory integration
+# setd.sh - directory marks and change directory integration with tab complete (autocomplete)
 #
 
 function markstore() {
@@ -68,6 +68,15 @@ function setd() {
     fi
 }
 
+_setd_autocomplete() {
+    if [[ "${#COMP_WORDS[@]}" != "2" ]]; then
+        return
+    fi
+    local words=$(declare -x | grep MARKDIR_ | cut -d "_" -f2- | cut -f1 -d "=")
+    COMPREPLY=($(compgen -W "$words" "${COMP_WORDS[1]}"))
+}
+
+
 function cd() {
     setd $1
 }
@@ -77,3 +86,9 @@ function cd() {
 if [ -f ~/.bash_markstore ]; then
     . ~/.bash_markstore
 fi
+
+# Set up function for complete for both setd and mark
+
+complete -d -X '.[^./]*' -F _setd_autocomplete setd
+complete -d -X '.[^./]*' -F _setd_autocomplete cd
+complete -F _setd_autocomplete mark
